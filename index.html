@@ -6,34 +6,36 @@
 <script>
 	var peer;
 	var myStream;
+	var availDevices = {};
 	navigator.getUserMedia = ( navigator.getUserMedia ||
                    navigator.webkitGetUserMedia ||
                    navigator.mozGetUserMedia ||
                    navigator.msGetUserMedia);
+
 
 	window.onload = function() {
   	peer = new Peer();
 			peer.on('open', function(id) {
 				document.getElementById('peer-id').innerHTML = "Peer ID:"+ id;
   	});
-	};
+
+		window.navigator.mediaDevices.enumerateDevices().then( (devices) => {
+			hasAudio = devices.some((device) => device.kind == 'audioinput')
+			hasVideo = devices.some((device) => device.kind == 'videoinput')
+			availDevices = {audio: hasAudio, video: hasVideo }
+		});
+	}
 
 	function register() {
 		var name = document.getElementById('name').value;
 
 			try {
 
-					navigator.getUserMedia({video: true,audio: true}, function(stream) {
+					navigator.getUserMedia(availDevices, function(stream) {
 							myStream = stream;
 							document.getElementById('register').style.display = 'none';
 							document.getElementById('userAdd').style.display = 'block';
 
-							peer.on('call', function(call) {
-									call.answer(myStream);
-									call.on('stream', function(remoteStream) {
-											createVideo(remoteStream);
-									});
-							});
 
 					}, function(err) {
 							console.log('Failed to get local stream' ,err);
