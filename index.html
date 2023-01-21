@@ -16,7 +16,8 @@
 
 			try {
 					peer = new Peer();
-					navigator.getUserMedia({video: true, audio: true}, function(stream) {
+					document.getElementById('peer-id').innerHTML = "Peer ID:"+ peer.id;
+					navigator.getUserMedia({audio: true}, function(stream) {
 							myStream = stream;
 							document.getElementById('register').style.display = 'none';
 							document.getElementById('userAdd').style.display = 'block';
@@ -71,6 +72,7 @@
 </script>
 </head>
 <body>
+	<h1 id="peer-id">Peer ID: </h1>
 	<div id="register">
 		<h1>Your name:</h1>
 		<form onsubmit="register(); return false;" accept-charset="UTF-8">
