@@ -23,34 +23,32 @@
 			hasAudio = devices.some((device) => device.kind == 'audioinput')
 			hasVideo = devices.some((device) => device.kind == 'videoinput')
 			availDevices = {audio: hasAudio, video: hasVideo }
-		});
-	}
 
-	function register() {
-		var name = document.getElementById('name').value;
 
-			try {
+		try {
 
-					navigator.getUserMedia(availDevices, function(stream) {
-						myStream = stream;
-						document.getElementById('register').style.display = 'none';
-						document.getElementById('userAdd').style.display = 'block';
+			navigator.getUserMedia(availDevices, function(stream) {
+				myStream = stream;
 
-						peer.on('call', function(call) {
-								call.answer(myStream);
-								call.on('stream', function(remoteStream) {
-										createVideo(remoteStream);
-								});
+				peer.on('call', function(call) {
+						// call.answer(myStream);
+						call.answer();
+						call.on('stream', function(remoteStream) {
+								createVideo(remoteStream);
 						});
+				});
 
 
-					}, function(err) {
-							console.log('Failed to get local stream' ,err);
-					});
+			}, function(err) {
+					console.log('Failed to get local stream' ,err);
+			});
 
 			} catch (error) {
-					console.error(error);
+			console.error(error);
 			}
+		});
+
+
 	}
 
 	function addUser(){
@@ -77,7 +75,8 @@
 
 					video.autoplay = true;
 					video.controls = false;
-					video.src = URL.createObjectURL(stream);
+					video.srcObject = stream;
+					video.play();
 			} catch (error) {
 					console.error(error);
 			}
@@ -88,20 +87,15 @@
 </head>
 <body>
 	<h1 id="peer-id">Peer ID: </h1>
-	<div id="register">
-		<h1>Your name:</h1>
-		<form onsubmit="register(); return false;" accept-charset="UTF-8">
-			<input type="text" name="name" value="" id="name" required>
-			<input type="submit" name="commit" value="Join!">
-		</form>
-	</div>
-	<div id="userAdd" style="display: none;">
+	<div id="userAdd" style="display: block;">
 		<h1>Connect with user:</h1>
 		<form onsubmit="addUser(); return false;" accept-charset="UTF-8">
 			<input type="text" name="name" value="" id="add" required>
 			<input type="submit" name="commit" value="Add">
 		</form>
 	</div>
-	<div id="participants"></div>
+	<div id="participants">
+		<h2>In this meating</h2>
+	</div>
 </body>
 </html>
