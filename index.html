@@ -32,9 +32,16 @@
 			try {
 
 					navigator.getUserMedia(availDevices, function(stream) {
-							myStream = stream;
-							document.getElementById('register').style.display = 'none';
-							document.getElementById('userAdd').style.display = 'block';
+						myStream = stream;
+						document.getElementById('register').style.display = 'none';
+						document.getElementById('userAdd').style.display = 'block';
+
+						peer.on('call', function(call) {
+								call.answer(myStream);
+								call.on('stream', function(remoteStream) {
+										createVideo(remoteStream);
+								});
+						});
 
 
 					}, function(err) {
