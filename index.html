@@ -11,15 +11,19 @@
                    navigator.mozGetUserMedia ||
                    navigator.msGetUserMedia);
 
+	window.onload = function() {
+  	peer = new Peer();
+			peer.on('open', function(id) {
+				document.getElementById('peer-id').innerHTML = "Peer ID:"+ id;
+  	});
+	};
+
 	function register() {
 		var name = document.getElementById('name').value;
 
 			try {
-					peer = new Peer();
-					peer.on('open', function(id) {
-						document.getElementById('peer-id').innerHTML = "Peer ID:"+ id;
-  				});
-					navigator.getUserMedia({audio: true}, function(stream) {
+
+					navigator.getUserMedia({video: true,audio: true}, function(stream) {
 							myStream = stream;
 							document.getElementById('register').style.display = 'none';
 							document.getElementById('userAdd').style.display = 'block';
