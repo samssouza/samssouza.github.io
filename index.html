@@ -16,7 +16,9 @@
 
 			try {
 					peer = new Peer();
-					document.getElementById('peer-id').innerHTML = "Peer ID:"+ peer.id;
+					peer.on('open', function(id) {
+						document.getElementById('peer-id').innerHTML = "Peer ID:"+ id;
+  				});
 					navigator.getUserMedia({audio: true}, function(stream) {
 							myStream = stream;
 							document.getElementById('register').style.display = 'none';
